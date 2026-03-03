@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Zomato KPT Prediction Dashboard</title>
+
+<style>
+
+body{
+font-family: Arial, sans-serif;
+background:#f5f5f5;
+padding:40px;
+}
+
+.container{
+width:500px;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+h2{
+text-align:center;
+color:#e23744;
+}
+
+label{
+font-weight:bold;
+}
+
+input{
+width:100%;
+padding:10px;
+margin-top:5px;
+margin-bottom:15px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#e23744;
+color:white;
+border:none;
+border-radius:5px;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#c92f3c;
+}
+
+.result{
+margin-top:20px;
+font-size:18px;
+text-align:center;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Zomato Kitchen Prep Time Predictor</h2>
+
+<label>Orders Last 15 Minutes</label>
+<input id="orders_last_15_min" type="number" placeholder="Example: 12">
+
+<label>Enhanced Total Load</label>
+<input id="enhanced_total_load" type="number" placeholder="Example: 18">
+
+<label>Trust Score</label>
+<input id="trust_score" type="number" placeholder="Example: 0.8">
+
+<label>Hour Of Day</label>
+<input id="hour_of_day" type="number" placeholder="0 - 23">
+
+<label>Peak Hour (0 or 1)</label>
+<input id="is_peak_hour" type="number" placeholder="Example: 1">
+
+<label>Weekend (0 or 1)</label>
+<input id="is_weekend" type="number" placeholder="Example: 0">
+
+<label>Merchant Reported KPT</label>
+<input id="merchant_reported_kpt" type="number" placeholder="Example: 14">
+
+<button onclick="predictKPT()">Predict KPT</button>
+
+<div class="result" id="result"></div>
+
+</div>
+
+
+<script>
+
+async function predictKPT(){
+
+const data = {
+
+orders_last_15_min: Number(document.getElementById("orders_last_15_min").value),
+
+enhanced_total_load: Number(document.getElementById("enhanced_total_load").value),
+
+trust_score: Number(document.getElementById("trust_score").value),
+
+hour_of_day: Number(document.getElementById("hour_of_day").value),
+
+is_peak_hour: Number(document.getElementById("is_peak_hour").value),
+
+is_weekend: Number(document.getElementById("is_weekend").value),
+
+merchant_reported_kpt: Number(document.getElementById("merchant_reported_kpt").value)
+
+};
+
+
+const response = await fetch("http://127.0.0.1:5000/predict",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify(data)
+
+});
+
+
+const result = await response.json();
+
+
+document.getElementById("result").innerHTML =
+
+`
+Predicted Kitchen Prep Time: <b>${result.predicted_kpt} minutes</b><br><br>
+Estimated Rider Waiting Time: <b>${result.rider_wait_time} minutes</b>
+`;
+
+}
+
+</script>
+
+</body>
+</html>
