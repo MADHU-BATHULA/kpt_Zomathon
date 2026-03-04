@@ -11,4 +11,4 @@ FEATURE_COLUMNS = [
 TARGET_COLUMN = 'true_kpt'
 
 MODEL_PATH = "model.pkl"
-DATA_PATH = "dataset.csv"
+DATA_PATH = "../dataset.csv"
